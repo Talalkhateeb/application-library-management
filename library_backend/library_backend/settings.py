@@ -31,12 +31,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
+    # ... اتركِ الأسطر الموجودة كما هي ...
     'django.contrib.staticfiles',
+
+    # أضيفي هذه الأسطر هنا لربط شغلك
+    'rest_framework',
+    'core',
 ]
 
 MIDDLEWARE = [
