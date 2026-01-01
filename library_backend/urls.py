@@ -22,8 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/books/', BookList.as_view()),
     path('api/borrows/', BorrowList.as_view()),
-    path('api/reservation',ReservationList.as_view()),
-    path('api/action',ActionList.as_view()),
-    path('api/book/<int:pk>',BookDetail.as_view())
+    path('api/reservation/',ReservationList.as_view()),
+    path('api/action/',ActionList.as_view(),name='action-list'),
+    path('api/book/<int:pk>/',BookDetail.as_view(),name='book_detail')
 ]
 
