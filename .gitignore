@@ -1,6 +1,6 @@
 venv/
 .venv/
-core/
+
 *.pyc
 __pycache__/
 db.sqlite3
