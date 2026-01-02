@@ -73,7 +73,8 @@ class Reservation(models.Model):
     reservation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    ordering = ['reservation_date']
+    class Meta:
+        ordering = ['reservation_date']
 class Purchased(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey('Book', on_delete=models.CASCADE)
@@ -109,7 +110,7 @@ class Rating(models.Model):
         if self.score < 1 or self.score > 5:
             raise ValidationError("Rating must be between 1 and 5.")
 
-class User(models.Model):
+class UserProfile(models.Model):
   
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone = models.CharField(max_length=15, blank=True, null=True)
