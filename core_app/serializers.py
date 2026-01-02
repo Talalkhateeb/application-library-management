@@ -1,25 +1,23 @@
 from rest_framework import serializers
-from .models import Book, Borrow, Action, Reservation
 from django.contrib.auth.models import User
+from .models import Payment, Purchased, Rating
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email']
 
-class BookSerializer(serializers.ModelSerializer):
+class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Book
-        fields = '__all__'
-        read_only_fields = ['status']
-class BorrowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Borrow
-        fields = '__all__'
-        read_only_fields = ['return_date', 'is_paid']
-class ActionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Action
+        model = Payment
         fields = '__all__'
 
-class ReservationSerializer(serializers.ModelSerializer):
+class PurchasedSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Reservation
+        model = Purchased
         fields = '__all__'
-        read_only_fields = ['reservation_date']
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = '__all__'

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # أضيفي هذه الأسطر هنا لربط شغلك
     'rest_framework',
     'core',
+    'core_app'
 ]
 
 MIDDLEWARE = [
