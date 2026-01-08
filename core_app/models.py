@@ -8,6 +8,7 @@ class Book(models.Model):
     author = models.CharField(max_length=255)
     b_year = models.IntegerField()
     status = models.CharField(max_length=50)
+    
     count = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -35,22 +36,21 @@ class Borrow(models.Model):
     return_date = models.DateField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    is_returned = models.BooleanField(default=False) 
     is_paid = models.BooleanField(default=False) 
     def save(self, *args, **kwargs):
         if not self.return_date:
             self.return_date = timezone.now().date() + timedelta(days=5)
-
-        if not self.is_paid:
-             print("you have to pay for this service ") 
         if not self.pk: 
-            if self.book.count > 0:
+         
+            if self.is_paid:
                 self.book.count -= 1
                 self.book.save()
-            else:
-                 raise  ValidationError({
-                "error": "this book is not available now",
-                "option": " you can reservate the book"
-                                        })    
+        else:
+            orig = Borrow.objects.get(pk=self.pk)
+            if not orig.is_paid and self.is_paid:
+                self.book.count-=1
+                self.book.save()
         super().save(*args, **kwargs)
 class Action(models.Model):
     ACTION_CHOICES = [
@@ -73,6 +73,7 @@ class Reservation(models.Model):
     reservation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    is_paid = models.BooleanField(default=False) 
     class Meta:
         ordering = ['reservation_date']
 class Purchased(models.Model):
@@ -92,12 +93,26 @@ class Purchased(models.Model):
         super().save(*args, **kwargs)
 
 class Payment(models.Model):
-    PAYMENT_METHODS = [('credit_card', 'Credit Card'), ('paypal', 'PayPal'), ('cash', 'Cash')]
+    PAYMENT_METHODS = [
+        ('credit_card', 'Credit Card'),
+        ('paypal', 'PayPal'),
+        ('cash', 'Cash')
+    ]
+
+    PAYMENT_TYPES = [
+        ('borrow', 'Borrow'),
+        ('reserve', 'Reserve'),
+        ('purchase', 'Purchase'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book,null=True, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField(null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_date = models.DateTimeField(auto_now_add=True)
     method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
-    is_success = models.BooleanField(default=True)
+    type = models.CharField(max_length=20, null=True, choices=PAYMENT_TYPES)
+    is_paid = models.BooleanField(default=False)
+    payment_date = models.DateTimeField(auto_now_add=True)
 
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

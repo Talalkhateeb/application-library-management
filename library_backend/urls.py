@@ -16,14 +16,20 @@ Including another URLconf
 """
 from django.urls import path
 from core_app import views
-from core_app.views import BookList, BorrowList,ReservationList,ActionList,BookDetail,UserList,PaymentList,RatingList,PurchasedList
+from core_app.views import BookList, BorrowList, ReservationDetail,ReservationList,ActionList,BookDetail, ReturnBookView,UserList,PaymentList,RatingList,PurchasedList
 from django.contrib import admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/return-book/', ReturnBookView.as_view(), name='return-book'),
+    path('api/user-books/', views.user_books),
+    path('api/login/', views.LoginView.as_view(), name='login'),
+    path('api/logout/', views.LogoutView.as_view(), name='logout'),
     path('api/books/', BookList.as_view()),
     path('api/borrows/', BorrowList.as_view()),
+    path('api/myborrows/', views.MyBorrowsView.as_view()),
     path('api/reservation/',ReservationList.as_view()),
+    path('api/reservation/<int:pk>/', ReservationDetail.as_view()),
     path('api/action/',ActionList.as_view(),name='action-list'),
     path('api/book/<int:pk>/',BookDetail.as_view(),name='book_detail'),
     path('users/', UserList.as_view(), name='user-list'),
